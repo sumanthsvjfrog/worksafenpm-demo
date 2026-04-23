@@ -10,7 +10,8 @@
     "loadsh": "^0.0.4",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.22",
-    "send": "^0.16.2"
+    "send": "^0.16.2",
+    "axios": "1.13.6"
   },
   "devDependencies": {
     "debug": "^4.1.1"
