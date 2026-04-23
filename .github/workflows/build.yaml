@@ -1,0 +1,57 @@
+name: "sumbotnpm"
+on: workflow_dispatch
+
+# This is required as per
+# https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#adding-permissions-settings
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+     runs-on: ubuntu-latest
+     env:
+      OIDC_PROVIDER: 'worksafenpm-demo'
+      PLATFORM_REPO: 'cgslearning-arcnpm-virtual'
+     steps:
+       - name: Checkout
+         uses: actions/checkout@v3
+              
+       - name: Setup Node npm
+         uses: actions/setup-node@v3
+   
+       - name: Setup JFrog CLI
+         uses: jfrog/setup-jfrog-cli@v4
+         env:  
+           JF_URL: https://psblr.jfrog.io
+         with:
+           oidc-provider-name: ${{ env.OIDC_PROVIDER }}
+
+
+       #- name: Set CLI Config
+        # run: jf npm-config --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
+
+      # - name: Run Audit scan for the git workspace
+       #  run: jf audit
+
+           
+       #- name: Install Dependencies
+        # run: jf npm install 
+         
+       #- name: Publish
+        # run: jf npm publish 
+         
+  #     - name: Collect Build info details
+  #       run: |
+  #        # Collect environment variables for the build
+  #        jf rt bce sumbotnpm ${{ github.run_number }}
+  #        # Collect VCS details from git and add them to the build
+  #        # jf rt build-add-git sumbotnpm ${{ github.run_number }}
+       
+  #     - name: Publish build-info to Artifactory
+  #       run: |
+  #        jf rt bp sumbotnpm ${{ github.run_number }}
+  #        
+  #     - name: Perform build scan
+  #       run: |   
+  #        jf bs sumbotnpm ${{ github.run_number }}
