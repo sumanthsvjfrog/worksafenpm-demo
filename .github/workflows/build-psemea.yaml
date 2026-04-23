@@ -11,8 +11,8 @@ jobs:
   build:
      runs-on: ubuntu-latest
      env:
-      OIDC_PROVIDER: 'sumanthsvjfrog/worksafenpm-demo@github'
-      PLATFORM_REPO: 'worksafeperm-npm-virt-demo'
+      OIDC_PROVIDER: 'sumgithub'
+      PLATFORM_REPO: 'worksafe-npm-virt'
       BUILD_NAME: "worksafe-npm-build"
       BUILD_ID: "${{github.run_number}}"
 
@@ -26,7 +26,7 @@ jobs:
        - name: Setup JFrog CLI
          uses: jfrog/setup-jfrog-cli@v4
          env:  
-           JF_URL: https://psblr.jfrog.io
+           JF_URL: https://psemea.jfrog.io
          with:
            oidc-provider-name: ${{ env.OIDC_PROVIDER }}
 

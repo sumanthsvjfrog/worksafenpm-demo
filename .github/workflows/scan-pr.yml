@@ -25,13 +25,12 @@ jobs:
 
       - uses: jfrog/frogbot@v2
         with:
-          oidc-provider-name: cgslearning
-          oidc-audience: cgslearning
+          oidc-provider-name: 'sumanthsvjfrog/worksafenpm-demo@github'
       
         env:
           # [Mandatory]
           # JFrog platform URL
-          JF_URL: https://${{ vars.JF_URL }}/
+          JF_URL: https://psblr.jfrog.io/
           JFROG_CLI_LOG_LEVEL: DEBUG
 
           # [Mandatory if JF_USER and JF_PASSWORD are not provided]
