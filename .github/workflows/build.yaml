@@ -1,4 +1,4 @@
-name: "sumbotnpm"
+name: "worksafenpm"
 on: workflow_dispatch
 
 # This is required as per
@@ -11,8 +11,11 @@ jobs:
   build:
      runs-on: ubuntu-latest
      env:
-      OIDC_PROVIDER: 'worksafenpm-demo'
-      PLATFORM_REPO: 'cgslearning-arcnpm-virtual'
+      OIDC_PROVIDER: 'sumanthsvjfrog/worksafenpm-demo@github'
+      PLATFORM_REPO: 'worksafeperm-npm-virt-demo'
+      BUILD_NAME: "worksafe-npm-build"
+      BUILD_ID: "${{github.run_number}}"
+
      steps:
        - name: Checkout
          uses: actions/checkout@v3
@@ -25,33 +28,33 @@ jobs:
          env:  
            JF_URL: https://psblr.jfrog.io
          with:
-           oidc-provider-name: sumanthsvjfrog/worksafenpm-demo@github
+           oidc-provider-name: ${{ env.OIDC_PROVIDER }}
 
 
-       #- name: Set CLI Config
-        # run: jf npm-config --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
+       - name: Set CLI Config
+         run: jf npm-config --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
 
-      # - name: Run Audit scan for the git workspace
-       #  run: jf audit
-
-           
-       #- name: Install Dependencies
-        # run: jf npm install 
+       - name: Run Audit scan for the git workspace
+         run: jf audit --watches worksafe-sec-watch --fail=true
+ 
+       - name: Install Dependencies
+         run: jf npm install --build-name=${{env.BUILD_NAME}} --build-number=${{env.BUILD_ID}}
          
-       #- name: Publish
-        # run: jf npm publish 
+       - name: Publish
+         run: jf npm publish --build-name=${{env.BUILD_NAME}} --build-number=${{env.BUILD_ID}} --project=worksafeperm
+
          
-  #     - name: Collect Build info details
-  #       run: |
-  #        # Collect environment variables for the build
-  #        jf rt bce sumbotnpm ${{ github.run_number }}
-  #        # Collect VCS details from git and add them to the build
-  #        # jf rt build-add-git sumbotnpm ${{ github.run_number }}
+       - name: Collect Build info details
+         run: |
+          # Collect environment variables for the build
+          jf rt bce ${{env.BUILD_NAME}} ${{ github.run_number }} --project=worksafeperm
+          # Collect VCS details from git and add them to the build
+          jf rt build-add-git ${{env.BUILD_NAME}} ${{ github.run_number }} --project=worksafeperm
        
-  #     - name: Publish build-info to Artifactory
-  #       run: |
-  #        jf rt bp sumbotnpm ${{ github.run_number }}
-  #        
-  #     - name: Perform build scan
-  #       run: |   
-  #        jf bs sumbotnpm ${{ github.run_number }}
+       - name: Publish build-info to Artifactory
+         run: |
+          jf rt bp ${{env.BUILD_NAME}} ${{ github.run_number }} --project=worksafeperm
+          
+       - name: Perform build scan
+         run: |   
+          jf bs ${{env.BUILD_NAME}} ${{ github.run_number }} --watches worksafe-sec-watch --fail=true
