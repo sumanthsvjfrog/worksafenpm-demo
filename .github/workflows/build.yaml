@@ -25,7 +25,7 @@ jobs:
          env:  
            JF_URL: https://psblr.jfrog.io
          with:
-           oidc-provider-name: ${{ env.OIDC_PROVIDER }}
+           oidc-provider-name: sumanthsvjfrog/worksafenpm-demo@github
 
 
        #- name: Set CLI Config
