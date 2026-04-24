@@ -1,4 +1,4 @@
-name: "worksafenpm"
+name: "worksafenpm2"
 on: workflow_dispatch
 
 # This is required as per
