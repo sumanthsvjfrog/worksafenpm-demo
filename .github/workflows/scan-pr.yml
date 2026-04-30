@@ -19,11 +19,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       # Install prerequisites1
-      - name: Setup Node
-        uses: actions/setup-node@v3
+    #  - name: Setup Node
+    #    uses: actions/setup-node@v3
 
 
-      - uses: jfrog/frogbot@v2
+      - uses: jfrog/frogbot@v3
         with:
           oidc-provider-name: 'sumanthsvjfrog/worksafenpm-demo@github'
       
