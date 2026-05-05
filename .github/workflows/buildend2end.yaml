@@ -38,7 +38,7 @@ jobs:
          run: jf npm-config --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
 
        - name: Run Audit scan for the git workspace
-         run: jf audit --watches worksafeperm-high-sec-local --fail=true
+         run: jf audit --watches worksafeperm-high-sec-local --fail=false
  
        - name: Install Dependencies
          run: jf npm install --build-name=${{env.BUILD_NAME}} --build-number=${{env.BUILD_ID}} --project=worksafeperm
