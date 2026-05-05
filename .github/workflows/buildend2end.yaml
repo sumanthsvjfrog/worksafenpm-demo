@@ -55,7 +55,7 @@ jobs:
       # ── Docker Scan ───────────────────────────────────────────────────────
        - name: Docker Scan
          run: |
-           jf docker scan psblr.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --watches worksafe-sec-watch --format json --fail=true
+           jf docker scan psblr.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --watches worksafe-sec-watch --fail=true
 
       # ── Docker Push ───────────────────────────────────────────────────────
        - name: Docker Push
