@@ -13,8 +13,11 @@ jobs:
      env:
       OIDC_PROVIDER: 'sumanthsvjfrog/worksafenpm-demo@github'
       PLATFORM_REPO: 'worksafeperm-npm-virt-demo'
-      BUILD_NAME: "worksafe-npm-build"
+      BUILD_NAME: "worksafe-npmdock-build"
       BUILD_ID: "${{github.run_number}}"
+      DOCKER_REPO: "worksafeperm-docker-virtual"
+      IMAGE_NAME: "worksafenpm-dockerbuild"
+      IMAGE_TAG: "${{github.run_number}}"
 
      steps:
        - name: Checkout
@@ -35,26 +38,41 @@ jobs:
          run: jf npm-config --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
 
        - name: Run Audit scan for the git workspace
-         run: jf audit --watches worksafe-sec-watch --fail=true
+         run: jf audit --watches worksafeperm-high-sec-local --fail=true
  
        - name: Install Dependencies
-         run: jf npm install --build-name=${{env.BUILD_NAME}} --build-number=${{env.BUILD_ID}}
+         run: jf npm install --build-name=${{env.BUILD_NAME}} --build-number=${{env.BUILD_ID}} --project=worksafeperm
          
        - name: Publish
          run: jf npm publish --build-name=${{env.BUILD_NAME}} --build-number=${{env.BUILD_ID}} --project=worksafeperm
 
-         
-       - name: Collect Build info details
+
+      # ── Docker Build ──────────────────────────────────────────────────────
+       - name: Docker Build
          run: |
-          # Collect environment variables for the build
-          jf rt bce ${{env.BUILD_NAME}} ${{ github.run_number }} --project=worksafeperm
-          # Collect VCS details from git and add them to the build
-          jf rt build-add-git ${{env.BUILD_NAME}} ${{ github.run_number }} --project=worksafeperm
+           jf docker build -t psblr.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .  --project=worksafeperm
+
+      # ── Docker Scan ───────────────────────────────────────────────────────
+       - name: Docker Scan
+         run: |
+           jf docker scan psblr.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --watches worksafe-sec-watch --format json --fail=true
+
+      # ── Docker Push ───────────────────────────────────────────────────────
+       - name: Docker Push
+         run: |
+           jf docker push psblr.jfrog.io/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --build-name=${{ env.BUILD_NAME }} --build-number=${{ env.BUILD_ID }} --project=worksafeperm
+
+      # ── Publish Build Info ────────────────────────────────────────────────
+       - name: Get Build Info Details
+         run: |
+           jf rt bag "${{ env.BUILD_NAME }}" "${{ env.BUILD_ID }}" --project=worksafeperm
+           jf rt bce "${{ env.BUILD_NAME }}" "${{ env.BUILD_ID }}" --project=worksafeperm
+    
        
        - name: Publish build-info to Artifactory
          run: |
-          jf rt bp ${{env.BUILD_NAME}} ${{ github.run_number }} --project=worksafeperm
+           jf rt bp ${{env.BUILD_NAME}} ${{ env.BUILD_ID }} --project=worksafeperm
           
        - name: Perform build scan
          run: |   
-          jf bs ${{env.BUILD_NAME}} ${{ github.run_number }}
+           jf bs ${{env.BUILD_NAME}} ${{ env.BUILD_ID }}
