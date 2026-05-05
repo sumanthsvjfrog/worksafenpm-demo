@@ -1,4 +1,4 @@
-name: "worksafenpm"
+name: "worksafenpmdock"
 on: workflow_dispatch
 
 # This is required as per
