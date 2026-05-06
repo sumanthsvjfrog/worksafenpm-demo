@@ -75,4 +75,4 @@ jobs:
           
        - name: Perform build scan
          run: |   
-           jf bs ${{env.BUILD_NAME}} ${{ env.BUILD_ID }}
+           jf bs ${{env.BUILD_NAME}} ${{ env.BUILD_ID }} --project=worksafeperm
