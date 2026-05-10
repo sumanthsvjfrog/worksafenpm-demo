@@ -15,8 +15,6 @@ jobs:
     # "frogbot" GitHub environment can approve the pull request to be scanned.
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
       # Install prerequisites1
       - name: Setup Node
