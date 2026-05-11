@@ -1,0 +1,18 @@
+#- params:
+    # Git parameters
+    #git:
+      # [Mandatory]
+      # Name of the git repository to scan
+     # repoName: jfrog-github-example-gnaga
+
+      # [Mandatory]
+      # List of branches to scan
+      #branches:
+       # - main
+        #- feature/frogbot-test
+    #scan:
+     # includeAllVulnerabilities: false
+      #failOnSecurityIssues: false
+      # projects:
+      #   - workingDirs:
+      #      - python-example/pip-example
